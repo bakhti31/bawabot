@@ -4,7 +4,7 @@
   "botName": "BAWABOT",
   "sessionName": "bawabot",
   "gamewaktu": 90,
-  "limitCount": 25,
+  "limitCount": 50,
   "gcount": {
 	"prem": 35,
 	"user": 15

@@ -26,7 +26,7 @@ let welcome = JSON.parse(fs.readFileSync('./database/welcome.json'));
 
 // judul console
 
-
+// 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
 // cek module perubahan
 function nocache(module, cb = () => { }) {
 	console.log(`Module ${module} sedang diperhatikan terhadap perubahan`) 
