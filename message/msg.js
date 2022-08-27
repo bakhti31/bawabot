@@ -24,12 +24,12 @@ const moment = require("moment-timezone");
 const util = require("util");
 const { exec, spawn } = require("child_process");
 const ffmpeg = require("fluent-ffmpeg");
-const xfar = require('xfarr-api');
+// const xfar = require('xfarr-api');
 const axios = require("axios");
-const hxz = require("hxz-api");
-const ra = require("ra-api");
-const kotz = require("kotz-api");
-const yts = require("yt-search");
+// const hxz = require("hxz-api");
+// const ra = require("ra-api");
+// const kotz = require("kotz-api");
+// const yts = require("yt-search");
 const speed = require("performance-now");
 const request = require("request");
 const ms = require("parse-ms");
@@ -158,17 +158,17 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 		       return conn.sendMessage(from, { document: doc, mimetype: mime, caption: caption }, options)
 		    }
 		}
-        async function sendPlay(from, query) {
-           var url = await yts(query)
-           url = url.videos[0].url
-           hxz.youtube(url).then(async(data) => {
-             var button = [{ buttonId: `!ytmp3 ${url}`, buttonText: { displayText: `🎵 Audio (${data.size_mp3})` }, type: 1 }, { buttonId: `!ytmp4 ${url}`, buttonText: { displayText: `🎥 Video (${data.size})` }, type: 1 }]
-             conn.sendMessage(from, { caption: `*Title :* ${data.title}\n*Quality :* ${data.quality}\n*Url :* https://youtu.be/${data.id}`, location: { jpegThumbnail: await getBuffer(data.thumb) }, buttons: button, footer: 'Pilih Salah Satu Button Dibawah⬇️', mentions: [sender] })
-           }).catch((e) => {
-             conn.sendMessage(from, { text: mess.error.api }, { quoted: msg })
-               ownerNumber.map( i => conn.sendMessage(from, { text: `Send Play Error : ${e}` }))
-           })
-        }
+        // async function sendPlay(from, query) {
+        //    var url = await yts(query)
+        //    url = url.videos[0].url
+        //    hxz.youtube(url).then(async(data) => {
+        //      var button = [{ buttonId: `!ytmp3 ${url}`, buttonText: { displayText: `🎵 Audio (${data.size_mp3})` }, type: 1 }, { buttonId: `!ytmp4 ${url}`, buttonText: { displayText: `🎥 Video (${data.size})` }, type: 1 }]
+        //      conn.sendMessage(from, { caption: `*Title :* ${data.title}\n*Quality :* ${data.quality}\n*Url :* https://youtu.be/${data.id}`, location: { jpegThumbnail: await getBuffer(data.thumb) }, buttons: button, footer: 'Pilih Salah Satu Button Dibawah⬇️', mentions: [sender] })
+        //    }).catch((e) => {
+        //      conn.sendMessage(from, { text: mess.error.api }, { quoted: msg })
+        //        ownerNumber.map( i => conn.sendMessage(from, { text: `Send Play Error : ${e}` }))
+        //    })
+        // }
 		const isUrl = (url) => {
 			return url.match(new RegExp(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)/, 'gi'))
 		}
@@ -313,7 +313,9 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			    var teks = allmenu(sender, prefix, pushname, isOwner, isPremium, balance, limit, limitCount, glimit, gcount)
 			    conn.sendMessage(from, { caption: teks, location: {}, templateButtons: buttonsDefault, mentions: [sender] })
 				break
-			case 'adin':
+			case 'tiar':
+			case 'p':
+			case 'bakhti':
 				reply(`Hi 👋 apa kamu mengenalku?, jika belum, sangat senang sekali jika kamu mau perkenalkan diri dulu sebelum lanjut percakapan ini. :D 😬`)
 				break;
 			case 'sayang':
@@ -329,7 +331,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 		            break
 			case prefix+'donate':
 			case prefix+'donasi':
-			    reply(`──「 MENU DONATE 」──\n\nHi ${pushname} 👋🏻\n\`\`\`GOPAY : 085755567917\`\`\`\n\`\`\`PULSA : 085755567917 (Indosat)\`\`\`\nTerimakasih donasi kamu sangat membantu\n──「 THX FOR YOU ! 」──`)
+			    reply(`──「 MENU DONATE 」──\n\nHi ${pushname} 👋🏻\n\`\`\`Dana : 082297177440\`\`\`\n\`\`\`PULSA : 082297177440 (Telkomsel)\`\`\`\nTerimakasih donasi kamu sangat membantu\n──「 THX! 」──`)
 			    break
 			case prefix+'owner':
 			    for (let x of ownerNumber) {
@@ -481,105 +483,105 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			//        limitAdd(sender, limit)
 			// 	}).catch(() => reply(mess.error.api))
 		    //     break
-            case prefix+'play':
-			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
-                if (args.length < 2) return reply(`Kirim perintah ${command} query\nContoh : ${command} monokrom`)
-                reply(mess.wait)
-                await sendPlay(from, q)
-				limitAdd(sender, limit)
-                break
-			case prefix+'ytmp4': case prefix+'mp4':
-			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
-			    if (args.length < 2) return reply(`Kirim perintah ${command} link`)
-			    if (!isUrl(args[1])) return reply(mess.error.Iv)
-			    if (!args[1].includes('youtu.be') && !args[1].includes('youtube.com')) return reply(mess.error.Iv)
-			    reply(mess.wait)
-			    xfar.Youtube(args[1]).then( data => {
-			      var teks = `*Youtube Video Downloader*\n\n*≻ Title :* ${data.title}\n*≻ Quality :* ${data.medias[1].quality}\n*≻ Size :* ${data.medias[1].formattedSize}\n*≻ Url Source :* ${data.url}\n\n_wait a minute sending media..._`
-			      conn.sendMessage(from, { video: { url: data.medias[1].url }, caption: teks }, { quoted: msg })
-			      limitAdd(sender, limit)
-				}).catch(() => reply(mess.error.api))
-			    break
-			case prefix+'ytmp3': case prefix+'mp3':
-			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
-			    if (args.length < 2) return reply(`Kirim perintah ${command} link`)
-			    if (!isUrl(args[1])) return reply(mess.error.Iv)
-			    if (!args[1].includes('youtu.be') && !args[1].includes('youtube.com')) return reply(mess.error.Iv)
-			    reply(mess.wait)
-			    xfar.Youtube(args[1]).then( data => {
-			      var teks = `*Youtube Audio Downloader*\n\n*≻ Title :* ${data.title}\n*≻ Quality :* ${data.medias[7].quality}\n*≻ Size :* ${data.medias[7].formattedSize}\n*≻ Url Source :* ${data.url}\n\n_wait a minute sending media..._`
-			      conn.sendMessage(from, { image: { url: data.thumbnail }, caption: teks }, { quoted: msg })
-			      conn.sendMessage(from, { document: { url: data.medias[7].url }, fileName: `${data.title}.mp3`, mimetype: 'audio/mp3' }, { quoted: msg })
-			      limitAdd(sender, limit)
-				}).catch(() => reply(mess.error.api))
-			    break
-			case prefix+'getvideo': case prefix+'getvidio':
-			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
-			    if (!isQuotedImage) return reply(`Balas hasil pencarian dari ${prefix}ytsearch dengan teks ${command} <no urutan>`)
-				if (!quotedMsg.fromMe) return reply(`Hanya bisa mengambil hasil dari pesan bot`)
-				if (args.length < 2) return reply(`Balas hasil pencarian dari ${prefix}ytsearch dengan teks ${command} <no urutan>`)
-				var kuoted = await quotedMsg.chats
-                var ytIdRegex = /(?:http(?:s|):\/\/|)(?:(?:www\.|)youtube(?:\-nocookie|)\.com\/(?:watch\?.*(?:|\&)v=|embed\/|v\/)|youtu\.be\/)([-_0-9A-Za-z]{11})/gi
-                var arrey = [...kuoted.matchAll(ytIdRegex)].map(x => x[1])
-                if (arrey.length == 0) return reply(`Reply hasil dari *${prefix}ytsearch* dengan perintah *${command}* urutan`)
-                if (isNaN(args[1])) return reply(`Hanya support angka! pilih angka 1 sampai 10\nContoh : ${command} 2`)
-                if (args[1] > arrey.length) return reply(`Urutan Hasil *${prefix}ytsearch* Hanya Sampai *${arrey.length}*`)
-			    reply(mess.wait)
-			    xfar.Youtube(`https://youtube.com/watch?v=${arrey[args[1] -1]}`).then( data => {
-			      var teks = `*Youtube Video Downloader*\n\n*≻ Title :* ${data.title}\n*≻ Quality :* ${data.medias[1].quality}\n*≻ Size :* ${data.medias[1].formattedSize}\n*≻ Url Source :* ${data.url}\n\n_wait a minute sending media..._`
-			      conn.sendMessage(from, { video: { url: data.medias[1].url }, caption: teks }, { quoted: msg })
-			       limitAdd(sender, limit)
-				}).catch(() => reply(mess.error.api))
-		        break
-			case prefix+'getmusik': case prefix+'getmusic':
-			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
-			    if (!isQuotedImage) return reply(`Balas hasil pencarian dari ${prefix}ytsearch dengan teks ${command} <no urutan>`)
-				if (!quotedMsg.fromMe) return reply(`Hanya bisa mengambil hasil dari pesan bot`)
-				if (args.length < 2) return reply(`Balas hasil pencarian dari ${prefix}ytsearch dengan teks ${command} <no urutan>`)
-				var kuoted = await quotedMsg.chats
-                var ytIdRegex = /(?:http(?:s|):\/\/|)(?:(?:www\.|)youtube(?:\-nocookie|)\.com\/(?:watch\?.*(?:|\&)v=|embed\/|v\/)|youtu\.be\/)([-_0-9A-Za-z]{11})/gi
-                var arrey = [...kuoted.matchAll(ytIdRegex)].map(x => x[1])
-                if (arrey.length == 0) return reply(`Reply hasil dari *${prefix}ytsearch* dengan perintah *${command}* urutan`)
-                if (isNaN(args[1])) return reply(`Hanya support angka! pilih angka 1 sampai 10\nContoh : ${command} 2`)
-                if (args[1] > arrey.length) return reply(`Urutan Hasil *${prefix}ytsearch* Hanya Sampai *${arrey.length}*`)
-			    reply(mess.wait)
-			    xfar.Youtube(`https://youtube.com/watch?v=${arrey[args[1] -1]}`).then( data => {
-			      var teks = `*Youtube Audio Downloader*\n\n*≻ Title :* ${data.title}\n*≻ Quality :* ${data.medias[7].quality}\n*≻ Size :* ${data.medias[7].formattedSize}\n*≻ Url Source :* ${data.url}\n\n_wait a minute sending media..._`
-			      conn.sendMessage(from, { image: { url: data.thumbnail }, caption: teks }, { quoted: msg })
-			      conn.sendMessage(from, { document: { url: data.medias[7].url }, fileName: `${data.title}.mp3`, mimetype: 'audio/mp3' }, { quoted: msg })
-			      limitAdd(sender, limit)
-				}).catch(() => reply(mess.error.api))
-			    break
-			case prefix+'igdl': case prefix+'instagram': case prefix+'ig':
-			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
-				if (args.length < 2) return reply(`Kirim perintah ${command} link`)
-			    if (!isUrl(args[1])) return reply(mess.error.Iv)
-			    if (!args[1].includes('instagram.com')) return reply(mess.error.Iv)
-			    reply(mess.wait)
-			    xfar.Instagram(args[1]).then( data => {
-			     var teks = `*Instagram Downloader*\n\n*≻ Title :* ${data.title}\n*≻ Jumlah Media :* ${data.medias.length}\n*≻ Url Source :* ${data.url}\n\n_wait a minute sending media..._`
-			     reply(teks)
-			     for (let i of data.medias) {
-				  if (i.extension === "mp4") {
-				   conn.sendMessage(from, { video: { url: i.url }})
-				  } else if (i.extension === "jpg") {
-				   conn.sendMessage(from, { image: { url: i.url }})
-			      }
-			     }
-				 limitAdd(sender, limit)
-			    }).catch(() => reply(mess.error.api))
-			    break
-			case prefix+'facebook': case prefix+'fbdl':
-			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
-			    if (args.length < 2) return reply(`Kirim perintah ${command} link`)
-			    if (!isUrl(args[1])) return reply(mess.error.Iv)
-			    if (!args[1].includes('facebook.com')) return reply(mess.error.Iv)
-			    reply(mess.wait)
-			    xfar.Facebook(args[1]).then( data => {
-			      conn.sendMessage(from, { video: { url: data.medias[0].url }, caption: data.title }, { quoted: msg })
-			      limitAdd(sender, limit)
-				}).catch(() => reply(mess.error.api))
-			    break
+    //         case prefix+'play':
+			 //    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
+    //             if (args.length < 2) return reply(`Kirim perintah ${command} query\nContoh : ${command} monokrom`)
+    //             reply(mess.wait)
+    //             await sendPlay(from, q)
+				// limitAdd(sender, limit)
+    //             break
+			// case prefix+'ytmp4': case prefix+'mp4':
+			//     if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
+			//     if (args.length < 2) return reply(`Kirim perintah ${command} link`)
+			//     if (!isUrl(args[1])) return reply(mess.error.Iv)
+			//     if (!args[1].includes('youtu.be') && !args[1].includes('youtube.com')) return reply(mess.error.Iv)
+			//     reply(mess.wait)
+			//     xfar.Youtube(args[1]).then( data => {
+			//       var teks = `*Youtube Video Downloader*\n\n*≻ Title :* ${data.title}\n*≻ Quality :* ${data.medias[1].quality}\n*≻ Size :* ${data.medias[1].formattedSize}\n*≻ Url Source :* ${data.url}\n\n_wait a minute sending media..._`
+			//       conn.sendMessage(from, { video: { url: data.medias[1].url }, caption: teks }, { quoted: msg })
+			//       limitAdd(sender, limit)
+			// 	}).catch(() => reply(mess.error.api))
+			//     break
+			// case prefix+'ytmp3': case prefix+'mp3':
+			//     if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
+			//     if (args.length < 2) return reply(`Kirim perintah ${command} link`)
+			//     if (!isUrl(args[1])) return reply(mess.error.Iv)
+			//     if (!args[1].includes('youtu.be') && !args[1].includes('youtube.com')) return reply(mess.error.Iv)
+			//     reply(mess.wait)
+			//     xfar.Youtube(args[1]).then( data => {
+			//       var teks = `*Youtube Audio Downloader*\n\n*≻ Title :* ${data.title}\n*≻ Quality :* ${data.medias[7].quality}\n*≻ Size :* ${data.medias[7].formattedSize}\n*≻ Url Source :* ${data.url}\n\n_wait a minute sending media..._`
+			//       conn.sendMessage(from, { image: { url: data.thumbnail }, caption: teks }, { quoted: msg })
+			//       conn.sendMessage(from, { document: { url: data.medias[7].url }, fileName: `${data.title}.mp3`, mimetype: 'audio/mp3' }, { quoted: msg })
+			//       limitAdd(sender, limit)
+			// 	}).catch(() => reply(mess.error.api))
+			//     break
+			// case prefix+'getvideo': case prefix+'getvidio':
+			//     if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
+			//     if (!isQuotedImage) return reply(`Balas hasil pencarian dari ${prefix}ytsearch dengan teks ${command} <no urutan>`)
+			// 	if (!quotedMsg.fromMe) return reply(`Hanya bisa mengambil hasil dari pesan bot`)
+			// 	if (args.length < 2) return reply(`Balas hasil pencarian dari ${prefix}ytsearch dengan teks ${command} <no urutan>`)
+			// 	var kuoted = await quotedMsg.chats
+   //              var ytIdRegex = /(?:http(?:s|):\/\/|)(?:(?:www\.|)youtube(?:\-nocookie|)\.com\/(?:watch\?.*(?:|\&)v=|embed\/|v\/)|youtu\.be\/)([-_0-9A-Za-z]{11})/gi
+   //              var arrey = [...kuoted.matchAll(ytIdRegex)].map(x => x[1])
+   //              if (arrey.length == 0) return reply(`Reply hasil dari *${prefix}ytsearch* dengan perintah *${command}* urutan`)
+   //              if (isNaN(args[1])) return reply(`Hanya support angka! pilih angka 1 sampai 10\nContoh : ${command} 2`)
+   //              if (args[1] > arrey.length) return reply(`Urutan Hasil *${prefix}ytsearch* Hanya Sampai *${arrey.length}*`)
+			//     reply(mess.wait)
+			//     xfar.Youtube(`https://youtube.com/watch?v=${arrey[args[1] -1]}`).then( data => {
+			//       var teks = `*Youtube Video Downloader*\n\n*≻ Title :* ${data.title}\n*≻ Quality :* ${data.medias[1].quality}\n*≻ Size :* ${data.medias[1].formattedSize}\n*≻ Url Source :* ${data.url}\n\n_wait a minute sending media..._`
+			//       conn.sendMessage(from, { video: { url: data.medias[1].url }, caption: teks }, { quoted: msg })
+			//        limitAdd(sender, limit)
+			// 	}).catch(() => reply(mess.error.api))
+		 //        break
+			// case prefix+'getmusik': case prefix+'getmusic':
+			//     if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
+			//     if (!isQuotedImage) return reply(`Balas hasil pencarian dari ${prefix}ytsearch dengan teks ${command} <no urutan>`)
+			// 	if (!quotedMsg.fromMe) return reply(`Hanya bisa mengambil hasil dari pesan bot`)
+			// 	if (args.length < 2) return reply(`Balas hasil pencarian dari ${prefix}ytsearch dengan teks ${command} <no urutan>`)
+			// 	var kuoted = await quotedMsg.chats
+   //              var ytIdRegex = /(?:http(?:s|):\/\/|)(?:(?:www\.|)youtube(?:\-nocookie|)\.com\/(?:watch\?.*(?:|\&)v=|embed\/|v\/)|youtu\.be\/)([-_0-9A-Za-z]{11})/gi
+   //              var arrey = [...kuoted.matchAll(ytIdRegex)].map(x => x[1])
+   //              if (arrey.length == 0) return reply(`Reply hasil dari *${prefix}ytsearch* dengan perintah *${command}* urutan`)
+   //              if (isNaN(args[1])) return reply(`Hanya support angka! pilih angka 1 sampai 10\nContoh : ${command} 2`)
+   //              if (args[1] > arrey.length) return reply(`Urutan Hasil *${prefix}ytsearch* Hanya Sampai *${arrey.length}*`)
+			//     reply(mess.wait)
+			//     xfar.Youtube(`https://youtube.com/watch?v=${arrey[args[1] -1]}`).then( data => {
+			//       var teks = `*Youtube Audio Downloader*\n\n*≻ Title :* ${data.title}\n*≻ Quality :* ${data.medias[7].quality}\n*≻ Size :* ${data.medias[7].formattedSize}\n*≻ Url Source :* ${data.url}\n\n_wait a minute sending media..._`
+			//       conn.sendMessage(from, { image: { url: data.thumbnail }, caption: teks }, { quoted: msg })
+			//       conn.sendMessage(from, { document: { url: data.medias[7].url }, fileName: `${data.title}.mp3`, mimetype: 'audio/mp3' }, { quoted: msg })
+			//       limitAdd(sender, limit)
+			// 	}).catch(() => reply(mess.error.api))
+			//     break
+			// case prefix+'igdl': case prefix+'instagram': case prefix+'ig':
+			//     if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
+			// 	if (args.length < 2) return reply(`Kirim perintah ${command} link`)
+			//     if (!isUrl(args[1])) return reply(mess.error.Iv)
+			//     if (!args[1].includes('instagram.com')) return reply(mess.error.Iv)
+			//     reply(mess.wait)
+			//     xfar.Instagram(args[1]).then( data => {
+			//      var teks = `*Instagram Downloader*\n\n*≻ Title :* ${data.title}\n*≻ Jumlah Media :* ${data.medias.length}\n*≻ Url Source :* ${data.url}\n\n_wait a minute sending media..._`
+			//      reply(teks)
+			//      for (let i of data.medias) {
+			// 	  if (i.extension === "mp4") {
+			// 	   conn.sendMessage(from, { video: { url: i.url }})
+			// 	  } else if (i.extension === "jpg") {
+			// 	   conn.sendMessage(from, { image: { url: i.url }})
+			//       }
+			//      }
+			// 	 limitAdd(sender, limit)
+			//     }).catch(() => reply(mess.error.api))
+			//     break
+			// case prefix+'facebook': case prefix+'fbdl':
+			//     if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
+			//     if (args.length < 2) return reply(`Kirim perintah ${command} link`)
+			//     if (!isUrl(args[1])) return reply(mess.error.Iv)
+			//     if (!args[1].includes('facebook.com')) return reply(mess.error.Iv)
+			//     reply(mess.wait)
+			//     xfar.Facebook(args[1]).then( data => {
+			//       conn.sendMessage(from, { video: { url: data.medias[0].url }, caption: data.title }, { quoted: msg })
+			//       limitAdd(sender, limit)
+			// 	}).catch(() => reply(mess.error.api))
+			//     break
 			// Owner Menu
 			// case prefix+'exif':
 			//     if (!isOwner) return reply(mess.OnlyOwner)
@@ -796,21 +798,21 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
                    reply(`Anda tidak bisa menghapus sesi tictactoe, karena bukan pemain!`)
                 }
                 break
-			case prefix+'tebakgambar':
-		        if (isGame(sender, isOwner, gcount, glimit)) return reply(`Limit game kamu sudah habis`)
-			    if (isPlayGame(from, tebakgambar)) return conn.reply(from, `Masih ada game yang belum diselesaikan`, tebakgambar[getGamePosi(from, tebakgambar)].msg)
-				kotz.tebakgambar().then( data => {
-				  data = data[0]
-				  data.jawaban = data.jawaban.split('Jawaban ').join('')
-				  var teks = `*TEBAK GAMBAR*\n\n`+monospace(`Petunjuk : ${data.jawaban.replace(/[b|c|d|f|g|h|j|k|l|m|n|p|q|r|s|t|v|w|x|y|z]/gi, '_')}\nWaktu : ${gamewaktu}s`)
-				  conn.sendMessage(from, { image: { url: data.image }, caption: teks }, { quoted: msg })
-				  .then( res => {
-					var jawab = data.jawaban.toLowerCase()
-					addPlayGame(from, 'Tebak Gambar', jawab, gamewaktu, res, tebakgambar)
-					gameAdd(sender, glimit)
-				  })
-				})
-			    break
+			// case prefix+'tebakgambar':
+		 //        if (isGame(sender, isOwner, gcount, glimit)) return reply(`Limit game kamu sudah habis`)
+			//     if (isPlayGame(from, tebakgambar)) return conn.reply(from, `Masih ada game yang belum diselesaikan`, tebakgambar[getGamePosi(from, tebakgambar)].msg)
+			// 	kotz.tebakgambar().then( data => {
+			// 	  data = data[0]
+			// 	  data.jawaban = data.jawaban.split('Jawaban ').join('')
+			// 	  var teks = `*TEBAK GAMBAR*\n\n`+monospace(`Petunjuk : ${data.jawaban.replace(/[b|c|d|f|g|h|j|k|l|m|n|p|q|r|s|t|v|w|x|y|z]/gi, '_')}\nWaktu : ${gamewaktu}s`)
+			// 	  conn.sendMessage(from, { image: { url: data.image }, caption: teks }, { quoted: msg })
+			// 	  .then( res => {
+			// 		var jawab = data.jawaban.toLowerCase()
+			// 		addPlayGame(from, 'Tebak Gambar', jawab, gamewaktu, res, tebakgambar)
+			// 		gameAdd(sender, glimit)
+			// 	  })
+			// 	})
+			//     break
 			// Group Menu
 			// case prefix+'linkgrup': case prefix+'link': case prefix+'linkgc':
 			//     if (!isGroup) return reply(mess.OnlyGrup)
