@@ -12,11 +12,9 @@ const {
 const { color, bgcolor } = require('../lib/color')
 const { getBuffer, fetchJson, fetchText, getRandom, getGroupAdmins, runtime, sleep, makeid } = require("../lib/myfunc");
 const { webp2mp4File } = require("../lib/convert")
-const { pinterest } = require("../lib/pinterest")
+// const { pinterest } = require("../lib/pinterest")
 const { isLimit, limitAdd, getLimit, giveLimit, addBalance, kurangBalance, getBalance, isGame, gameAdd, givegame, cekGLimit } = require("../lib/limit");
-const { isTicTacToe, getPosTic } = require("../lib/tictactoe");
 const { addPlayGame, getJawabanGame, isPlayGame, cekWaktuGame, getGamePosi } = require("../lib/game");
-const tictac = require("../lib/tictac");
 const _prem = require("../lib/premium");
 
 const fs = require ("fs");
@@ -39,7 +37,6 @@ const Exif = require("../lib/exif")
 const exif = new Exif()
 
 // DB Game
-let tictactoe = [];
 let tebakgambar = []
 
 // Database
@@ -251,7 +248,7 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 		_prem.expiredCheck(conn, premium)
 
 		// Tictactoe
-		if (isTicTacToe(from, tictactoe)) tictac(chats, prefix, tictactoe, from, sender, reply, mentions, addBalance, balance)
+		// if (isTicTacToe(from, tictactoe)) tictac(chats, prefix, tictactoe, from, sender, reply, mentions, addBalance, balance)
 
         // Game
 		cekWaktuGame(conn, tebakgambar)

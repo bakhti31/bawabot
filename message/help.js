@@ -34,18 +34,7 @@ exports.allmenu = (sender, prefix, pushname, isOwner, isPremium, balance, limit,
   ≻ ${prefix}menu
   ≻ ${prefix}donasi
 
-  *( ⌛ )  Downloader*
-  ≻ ${prefix}play
-  ≻ ${prefix}ytmp4
-  ≻ ${prefix}ytmp3
-  ≻ ${prefix}getvideo
-  ≻ ${prefix}getmusic
-  ≻ ${prefix}instagram
-  ≻ ${prefix}facebook
-  
   *( 🎮 )  Game Menu*
-  ≻ ${prefix}tictactoe
-  ≻ ${prefix}delttc
   ≻ ${prefix}tebakgambar
 
 `+'     \`\`\`Powered by Nodejs\`\`\`'

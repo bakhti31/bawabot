@@ -2,7 +2,7 @@ const cron = require('node-cron');
 
 module.exports = function (db, sessionMap, startDEVICE) {
     cron.schedule('*/1 * * * * *', function () {
-        console.log('cronjob berjalan');
+        // console.log('cronjob berjalan');
        
         var datetime = new Date();
         var dateString = new Date(

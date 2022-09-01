@@ -78,6 +78,7 @@ const connectToWhatsApp = async () => {
 	conn.ev.on('messages.upsert', async m => {
 		if (!m.messages) return;
 		var msg = m.messages[0]
+		// console.log(JSON.stringify(msg))
 		msg = serialize(conn, msg)
 		msg.isBaileys = msg.key.id.startsWith('BAE5') || msg.key.id.startsWith('3EB0')
 		require('./message/msg')(conn, msg, m, setting, store, welcome)
