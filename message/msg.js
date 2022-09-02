@@ -28,7 +28,7 @@ const axios = require("axios");
 // const ra = require("ra-api");
 // const kotz = require("kotz-api");
 // const yts = require("yt-search");
-const speed = require("performance-now");
+// const speed = require("performance-now");
 const request = require("request");
 const ms = require("parse-ms");
 
@@ -321,11 +321,11 @@ module.exports = async(conn, msg, m, setting, store, welcome) => {
 			case prefix+'runtime':
 			    reply(runtime(process.uptime()))
 			    break
-			case prefix+'speed':
-			    let timestamp = speed();
-                            let latensi = speed() - timestamp
-                            textImg(`${latensi.toFixed(4)} Second`)
-		            break
+			// case prefix+'speed':
+			//     let timestamp = speed();
+   //                          let latensi = speed() - timestamp
+   //                          textImg(`${latensi.toFixed(4)} Second`)
+		 //            break
 			case prefix+'donate':
 			case prefix+'donasi':
 			    reply(`──「 MENU DONATE 」──\n\nHi ${pushname} 👋🏻\n\`\`\`Dana : 082297177440\`\`\`\n\`\`\`PULSA : 082297177440 (Telkomsel)\`\`\`\nTerimakasih donasi kamu sangat membantu\n──「 THX! 」──`)
