@@ -29,7 +29,7 @@ const axios = require("axios");
 // const kotz = require("kotz-api");
 // const yts = require("yt-search");
 // const speed = require("performance-now");
-const request = require("request");
+// const request = require("request");
 const ms = require("parse-ms");
 
 // Exif
